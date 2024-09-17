@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Simon's Bakery Inventory Management</title>
+</head>
+<body>
+  <div>
+    <%- include('partials/header.ejs') %>
+    <main>
+      <div class="container">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Item name</th>
+              <th scope="col">Count</th>
+              <th scope="col">Unit</th>
+              <th scope="col">Supplier</th>
+              <th scope="col">Category</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% inventoryItems.forEach(item => {%>
+              <tr>
+                <th scope="row" data-item-id="<%= item.id %>"><%= item.name %></th>
+                <td><%= item.count %></td>
+                <td><%= item.unit %></td>
+                <td><%= suppliers.find(supplier => supplier.id === item.supplier_id).name %></td>
+                <td><%= categories.find(category => category.id === item.category_id).name %></td>
+                <td>
+                  <a href="/items/<%= item.id %>/edit"><button>Update</button></a>
+                  <form action="/items/<%= item.id %>/delete" method="DELETE">
+                    <input type="submit" value="Delete">
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
