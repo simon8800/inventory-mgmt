@@ -1,8 +1,11 @@
-# Achiote Inventory Management
+# Simon's Bakery Inventory Management
 
-A mock inventory management app where a bakery manager can track and record their inventory such as rice, oil, proteins, vegetables, etc.
+A mock inventory management app where for Simon's Bakery to track and record inventory.
 
-## Tech Stack
+It includes information about the count, unit, supplier, and category. The filter and sort functionality enables a user to organize data for viewing.
+
+## Tech used
 
 - Express.js
 - PostgreSQL
+- Lucide Icons
