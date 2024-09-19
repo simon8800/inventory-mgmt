@@ -65,7 +65,7 @@ INSERT INTO inventory_items (name, count, unit, category_id, supplier_id) VALUES
 async function main() {
   console.log("seeding...");
   const client = new Client({
-    connectionString: process.argv[1],
+    connectionString: process.argv[2],
   });
   await client.connect();
   await client.query(SQL);
