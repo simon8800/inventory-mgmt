@@ -65,7 +65,7 @@ INSERT INTO inventory_items (name, count, unit, category_id, supplier_id) VALUES
 async function main() {
   console.log("seeding...");
   const client = new Client({
-    connectionString: `postgresql://${process.env.DATABASE_ROLE_NAME}:${process.env.DATABASE_PASSWORD}@localhost:5432/${process.env.DATABASE_NAME}`,
+    connectionString: process.argv[1],
   });
   await client.connect();
   await client.query(SQL);
