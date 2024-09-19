@@ -6,6 +6,7 @@ const {
   itemsPostCreateItem,
   itemsGetUpdateItem,
   itemsDeleteItem,
+  itemsPostUpdateItem,
 } = require("../controllers/itemsController");
 
 const itemsRouter = express.Router();
@@ -16,6 +17,7 @@ itemsRouter.get("/new", itemsGetCreateItem);
 itemsRouter.get("/:itemId", itemsGetItem);
 itemsRouter.post("/new", itemsPostCreateItem);
 itemsRouter.get("/:itemId/edit", itemsGetUpdateItem);
+itemsRouter.post("/:itemId/edit", itemsPostUpdateItem);
 itemsRouter.delete("/:itemId", itemsDeleteItem);
 
 module.exports = itemsRouter;

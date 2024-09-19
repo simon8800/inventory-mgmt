@@ -48,6 +48,18 @@ INSERT INTO categories (name) VALUES
   ('Seasonal'),
   ('Fried Goods'),
   ('Ingredients');
+
+INSERT INTO inventory_items (name, count, unit, category_id, supplier_id) VALUES
+  ('Bakery Mixer', 5, 'units', 1, 1),
+  ('Custard Buns', 150, 'pieces', 2, 2),
+  ('Croissants', 100, 'pieces', 3, 3),
+  ('Apple Filling', 50, 'kg', 4, 4),
+  ('Mooncakes', 200, 'pieces', 5, 5),
+  ('Donuts', 75, 'pieces', 6, 6),
+  ('Flour', 500, 'kg', 7, 7),
+  ('Dough Cutter', 12, 'units', 1, 8),
+  ('Sesame Paste', 20, 'kg', 7, 10),
+  ('Rolling Pin', 8, 'units', 1, 9);
 `;
 
 async function main() {

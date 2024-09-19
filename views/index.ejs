@@ -1,47 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <title>Simon's Bakery Inventory Management</title>
-</head>
-<body>
-  <div>
-    <%- include('partials/header.ejs') %>
-    <main>
-      <div class="container">
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Item name</th>
-              <th scope="col">Count</th>
-              <th scope="col">Unit</th>
-              <th scope="col">Supplier</th>
-              <th scope="col">Category</th>
-              <th scope="col">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% inventoryItems.forEach(item => {%>
-              <tr>
-                <th scope="row" data-item-id="<%= item.id %>"><%= item.name %></th>
-                <td><%= item.count %></td>
-                <td><%= item.unit %></td>
-                <td><%= suppliers.find(supplier => supplier.id === item.supplier_id).name %></td>
-                <td><%= categories.find(category => category.id === item.category_id).name %></td>
-                <td>
-                  <a href="/items/<%= item.id %>/edit"><button>Update</button></a>
-                  <form action="/items/<%= item.id %>/delete" method="DELETE">
-                    <input type="submit" value="Delete">
-                  </form>
-                </td>
-              </tr>
-            <% }) %>
-          </tbody>
-        </table>
-      </div>
-    </main>
-  </div>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Simon's Bakery Inventory Management</title>
+  </head>
+  <body>
+    <div>
+      <%- include('partials/header.ejs') %>
+      <main>
+        <div class="table-container container">
+
+          <div class="table-tools">
+            <div class="table-tool">
+              <label for="filter">
+                <i data-lucide="filter" class="icon-md" aria-label="filter"></i>
+              </label>
+              <select name="filter" id="filter" value="<%= category %>">
+                <% categories.forEach(category => { %>
+                <option value="<%= category.id %>"><%= category.name %></option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="table-tool">
+              <label for="sort">
+                <i data-lucide="arrow-up-down" class="icon-md" aria-label="sort"></i>
+              </label>
+              <select name="sort" id="sort" value="<%= sortBy %>">
+                <option value="name">Name</option>
+                <option value="count">Count</option>
+                <option value="category">Category</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="inventory-table">
+              <thead>
+                <tr class="table-columns">
+                  <th class="item-name-col" scope="col">Item Name</th>
+                  <th class="count-col" scope="col">Count</th>
+                  <th class="unit-col" scope="col">Unit</th>
+                  <th class="supplier-col" scope="col">Supplier</th>
+                  <th class="category-col" scope="col">Category</th>
+                  <th class="actions-col" scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% inventoryItems.forEach(item => {%>
+                <tr class="table-row">
+                  <th scope="row" data-item-id="<%= item.id %>">
+                    <a class="rm-text-deco" href="/items/<%= item.id %>"
+                      ><%= item.name %></a
+                    >
+                  </th>
+                  <td><%= item.count %></td>
+                  <td><%= item.unit %></td>
+                  <td>
+                    <%= suppliers.find(supplier => supplier.id ===
+                    item.supplier_id).name %>
+                  </td>
+                  <td>
+                    <%= categories.find(category => category.id ===
+                    item.category_id).name %>
+                  </td>
+                  <td>
+                    <div class="row-action flex gap-sm">
+                      <a class="rm-text-deco-all" href="/items/<%= item.id %>/edit"
+                        ><button class="update-btn btn flex align-center"><i data-lucide="pencil" class="icon-sm" aria-hidden="true"></i>Update</button></a
+                      >
+                      <form
+                        onsubmit="onDelete(event)"
+                        data-item-name="<%= item.name %>"
+                        data-item-id="<%= item.id %>"
+                        action="/items/<%= item.id %>/delete"
+                        method="DELETE"
+                      >
+                        <button type="submit" class="delete-btn btn flex align-center"><i data-lucide="trash-2" class="icon-sm" aria-hidden="true"></i>Delete</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        
+        </div>
+      </main>
+    </div>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      lucide.createIcons();
+
+      const filter = document.querySelector("#filter");
+      filter.value = '<%= category %>';
+      filter.onchange = (event) => {
+        window.location.href = `/?category=${filter.value}&sortBy=${sort.value}`
+      }
+
+      
+      const sort = document.querySelector("#sort");
+      sort.value = '<%= sortBy %>'
+      sort.onchange = (event) => {
+        window.location.href = `/?category=${filter.value}&sortBy=${sort.value}`
+      }
+
+
+
+      function onDelete(event) {
+        event.preventDefault();
+
+        let form = event.target;
+        let itemName = form.dataset.itemName;
+        let itemId = form.dataset.itemId;
+        let userPassword = prompt(`Enter admin password to delete ${itemName}`);
+        if (userPassword) {
+          fetch(`/items/${itemId}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              itemId: itemId,
+              password: userPassword,
+            }),
+          })
+            .then((res) => res.json())
+            .then((res) => {
+              if (res.accepted) {
+                alert(res.message);
+                window.location.reload();
+              } else {
+                alert(res.message);
+              }
+            });
+        }
+      }
+
+    </script>
+  </body>
 </html>
