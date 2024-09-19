@@ -25,6 +25,5 @@ app.get("/", appGet);
 
 // Hey! Listen!
 app.listen(PORT, () => {
-  const url = `http://localhost:${PORT}`;
-  console.log(`Running on ${url}`);
+  console.log(`Listening on ${PORT}`);
 });
